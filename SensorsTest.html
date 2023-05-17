@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="Viewport" content="width=device-width" intial-scale="1.0">
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <title>Organization task</title>
+</head>
+
+<body  style="background-color:darkgray;" > 
+  
+<header>
+  <h1 class=" text-light text-center bg-dark " style="padding:0.4em;box-shadow: 5px 1px 10px 1px rgb(6, 223, 252)">Smart watch</h1>
+</header>
+  
+  <div class="container text-center text-light  " style="padding: 2rem;">
+    
+       <div class="card text-bg-dark mx-auto "style="max-width: 18rem; box-shadow: 5px 1px 10px 1px rgb(0, 0, 0);
+      ">
+       <div class="card-header ">Temperature </div>
+       <div class="card-body ">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:20%" id ="prog1"></div>
+        </div>
+         Your temperature is <span id="lapel1">0</span>
+        </div> 
+<hr>
+        <div class="card-header ">Heart rate </div>
+       <div class="card-body ">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:20%" id ="prog2"></div>
+        </div>
+         Your heart rate is <span id="lapel2">0</span>
+        </div> 
+  </div>
+  <hr>
+        <div>Heart Beat Plotter</div>
+ 
+        <script src="https://cdn.jsdelivr.net/npm/reconnecting-websocket@3.0.0/reconnecting-websocket.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
+         <canvas id="chart"></canvas>
+        
+  
+</body>
+</html>
+
+<script>
+      
+ const Host = "ws://192.168.1.14:3000" ;
+   var ws = new WebSocket(Host) ; 
+   ws.onopen=function(){
+    console.log('Connected to server')
+   }
+
+ws.onmessage=function(event){
+      const data = JSON.parse(event.data);
+			const Temperature = data.value1;
+			const HeartRate = data.value2;
+
+      console.log(Temperature);
+      console.log(HeartRate);
+
+      var progressBar =document.getElementById("prog1") ;
+      var progressBar2 =document.getElementById("prog2") ;
+      var invisibleslider = document.getElementById("slider")
+    
+     
+      progressBar.style.width = parseInt(Temperature) + "%";
+			lapel1.innerHTML = Temperature ;
+
+			progressBar2.style.width = parseInt(HeartRate) + "%";
+			lapel2.innerHTML = HeartRate ;
+  
+      chart.data.labels.push(new Date().toLocaleTimeString());
+      chart.data.datasets[0].data.push(parseFloat(data.value2));
+      chart.update();
+
+        if (parseInt(Temperature)>=20) {
+			      sendTelegramMessage("Warning!");
+            }
+    }
+		
+
+  
+
+    function sendTelegramMessage(message) {
+			const telegramBotToken = "6140302269:AAG5rMISL5xamoIG5dnJcDuaJOK9qt1vWQU";
+			const chatId = "819635862";
+			const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+      
+			fetch(url)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error("Failed to send message");
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
+		}
+		
+			
+    const chart = new Chart(document.getElementById('chart'), {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Sensor Data',
+              data: [],
+              fill: false,
+              borderColor: 'black',
+              borderWidth: 0.5,
+              tension: 0,
+              pointRadius: 0, 
+              pointHoverRadius: 1,
+            },
+          ],
+        },
+      });
+</script>
