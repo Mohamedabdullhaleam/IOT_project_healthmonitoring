@@ -37,9 +37,9 @@
         <div>Heart Beat Plotter</div>
  
         <script src="https://cdn.jsdelivr.net/npm/reconnecting-websocket@3.0.0/reconnecting-websocket.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
          <canvas id="chart"></canvas>
-        
+         
   
 </body>
 </html>
@@ -62,7 +62,7 @@ ws.onmessage=function(event){
 
       var progressBar =document.getElementById("prog1") ;
       var progressBar2 =document.getElementById("prog2") ;
-      var invisibleslider = document.getElementById("slider")
+      
     
      
       progressBar.style.width = parseInt(Temperature) + "%";
@@ -75,13 +75,14 @@ ws.onmessage=function(event){
       chart.data.datasets[0].data.push(parseFloat(data.value2));
       chart.update();
 
-        if (parseInt(Temperature)>=20) {
-			      sendTelegramMessage("Warning!");
+       function checkTemp(){
+          if (parseInt(Temperature)>=300) {
+            sendTelegramMessage("Warning!");
             }
-    }
-		
+        }
 
-  
+            document.getElementById("prog1").addEventListener("input",checkTemp()) ;
+    }
 
     function sendTelegramMessage(message) {
 			const telegramBotToken = "6140302269:AAG5rMISL5xamoIG5dnJcDuaJOK9qt1vWQU";
@@ -101,7 +102,7 @@ ws.onmessage=function(event){
 		
 			
     const chart = new Chart(document.getElementById('chart'), {
-        type: 'line',
+        type:'line',
         data: {
           labels: [],
           datasets: [
@@ -114,6 +115,8 @@ ws.onmessage=function(event){
               tension: 0,
               pointRadius: 0, 
               pointHoverRadius: 1,
+
+              
             },
           ],
         },

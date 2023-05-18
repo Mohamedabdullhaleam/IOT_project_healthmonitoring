@@ -7,9 +7,9 @@
 
 #include <Wire.h>
 WiFiClientSecure secured_client;
-const char* ssid = "Mohamed";
-const char* password = "mohamed123";
-#define SERVER  "172.20.10.5"
+const char* ssid = "WEDCB108";
+const char* password = "Mohamed12369";
+#define SERVER  "192.168.1.14"
 #define PORT    3000
 #define URL     "/"
 
@@ -73,10 +73,10 @@ void loop() {
      delta = millis() - lastBeat;
     lastBeat = millis();
 
-    beatsPerMinute = 60 / (delta / 1000.0);
+    beatsPerMinute = 180 / (delta / 1000.0);
 
-    if (beatsPerMinute < 255 && beatsPerMinute > 20)
-    {
+   if (beatsPerMinute < 255 && beatsPerMinute >20)
+   {
       rates[rateSpot++] = (byte)beatsPerMinute; //Store this reading in the array
       rateSpot %= RATE_SIZE; //Wrap variable
 
@@ -85,8 +85,8 @@ void loop() {
       for (byte x = 0 ; x < RATE_SIZE ; x++)
         beatAvg += rates[x];
       beatAvg /= RATE_SIZE;
-    }
-  }
+   }
+ }
 
   Serial.print("IR=");
   Serial.print(irValue);
@@ -94,6 +94,7 @@ void loop() {
   Serial.print(beatsPerMinute);
   Serial.print(", Avg BPM=");
   Serial.print(beatAvg);
+
 
   if (irValue < 50000){
     Serial.print(" No finger?");
@@ -124,11 +125,11 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
 
 void sendValue() {
   StaticJsonDocument<256> jsonDocument;
-  jsonDocument["value1"] = val;
-  jsonDocument["value2"] = beatAvg;
-  //jsonDocument["value3"] = beatsPerMinute;
   String jsonData;
-  serializeJson(jsonDocument, jsonData);
+  jsonDocument["value1"] = Temperature ;
+  jsonDocument["value2"] = beatsPerMinute;
+  //jsonDocument["value3"] = beatsPerMinute;
+  serializeJson(jsonDocument,jsonData);
 
   webSocket.sendTXT(jsonData);
 }
