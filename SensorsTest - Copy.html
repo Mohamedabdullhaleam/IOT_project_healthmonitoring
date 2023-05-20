@@ -11,7 +11,7 @@
 <body  style="background-color:rgb(169, 169, 169);" > 
   
 <header>
-  <h1 class=" text-light text-center bg-dark " style="padding:0.4em;box-shadow: 5px 1px 10px 1px rgb(6, 223, 252)">Smart watch</h1>
+  <h1 class=" text-light text-center bg-dark " style="padding:0.4em;box-shadow: 5px 1px 10px 1px rgb(6, 223, 252)">Health monitoring system</h1>
 </header>
   
   <div class="container text-center text-light  " style="padding: 2rem;">
@@ -39,6 +39,17 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-6">
+        <div class="card text-bg-dark mx-auto" style="box-shadow: 5px 1px 10px 1px rgb(0, 0, 0);">
+          <div class="card-header">spO2 %</div>
+          <div class="card-body">
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%" id="prog3"></div>
+            </div>
+            Your oxygen is <span id="lapel3">0</span>%
+          </div>
+        </div>
+      </div>
     </div>
 
     <hr>
@@ -46,7 +57,6 @@
     <div>Heart Beat Plotter</div>
 
     <div>
-      <script src="https://cdn.jsdelivr.net/npm/reconnecting-websocket@3.0.0/reconnecting-websocket.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"></script>
       <canvas id="chart"></canvas>
     </div>
@@ -58,7 +68,7 @@
 
 <script>
       
- const Host = "ws://192.168.1.14:3000" ;
+ const Host = "ws://172.20.10.5:3000" ;
  var ws = new WebSocket(Host) ; 
  ws.onopen=function(){
    console.log('Connected to server')
@@ -68,12 +78,15 @@
    const data = JSON.parse(event.data);
    const Temperature = data.value1;
    const HeartRate = data.value2;
+   const SPO2 = data.value3;
 
    console.log(Temperature);
    console.log(HeartRate);
+   console.log(SPO2);
 
    var progressBar1 = document.getElementById("prog1");
    var progressBar2 = document.getElementById("prog2");
+   var progressBar3 = document.getElementById("prog3");
     
    progressBar1.style.width = parseInt(Temperature) + "%";
    lapel1.innerHTML = Temperature;
@@ -81,17 +94,21 @@
    progressBar2.style.width = parseInt(HeartRate) + "%";
    lapel2.innerHTML = HeartRate;
 
+   if(parseInt(SPO2)>=90){
+   progressBar3.style.width = parseInt(SPO2) + "%";
+   lapel3.innerHTML = SPO2;}
+
    chart.data.labels.push(new Date().toLocaleTimeString());
    chart.data.datasets[0].data.push(parseFloat(HeartRate));
    chart.update();
 
    function checkTemp() {
-     if (parseInt(Temperature) >= 300) {
-       sendTelegramMessage("Warning!");
+     if (parseInt(Temperature) >= 40) {
+       sendTelegramMessage("Warning!!! , Temberature is : "+ Temperature +" , Heart rate is : "+HeartRate);
      }
    }
 
-   document.getElementById("prog1").addEventListener("input", checkTemp());
+ progressBar1.addEventListener("input", checkTemp());
  }
 
  function sendTelegramMessage(message) {

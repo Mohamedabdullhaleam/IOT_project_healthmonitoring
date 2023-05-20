@@ -22,21 +22,25 @@ let lastRecordedTime = null;
 wss.on('connection', (ws) => {
   console.log('someone connected');
   
+  
   ws.on('message', (msg) => {
     Broadcast(msg.toString('utf8'));
     const txtPath = 'D:/iot2/New Text Document.txt';
     const data = JSON.parse(msg.toString('utf8'));
     const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 10); 
-    const formattedTime = now.toISOString().slice(11, 19); 
+    var date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+    var time = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
     
-    if (formattedTime !== lastRecordedTime) { 
-      const formattedData = `${formattedDate},${formattedTime},${data.value1},${data.value2}\n`;
+    // console.log(now)
+    // console.log(date)
+    // console.log(time)
+    if (time !== lastRecordedTime) { 
+      const formattedData = `${date},${time},${data.value1},${data.value2},${data.value3}\n`;
       fs.appendFile(txtPath, formattedData, (err) => {
         if (err) throw err;
         // console.log('Data written to file');
       });
-      lastRecordedTime = formattedTime;
+      lastRecordedTime = time;
     }
   });
 });
