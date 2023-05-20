@@ -63,19 +63,8 @@ var gaugeHR = new RadialGauge({
   colorValueBoxRectEnd: "#049faa",
   colorValueBoxBackground: "#f1fbfc",
   valueInt: 2,
-  majorTicks: [
-      "0",
-      "20",
-      "40",
-      "60",
-      "80",
-      "100",
-      "120",
-      "140",
-      "160"
-
-  ],
-  minorTicks: 4,
+ 
+  
   strokeTicks: true,
   highlights: [
       {
@@ -87,7 +76,7 @@ var gaugeHR = new RadialGauge({
   colorPlate: "#fff",
   borderShadowWidth: 0,
   borders: false,
-  needleType: "line",
+  needleType: "",
   colorNeedle: "#007F80",
   colorNeedleEnd: "#007F80",
   needleWidth: 2,
@@ -101,7 +90,7 @@ var gaugeHR = new RadialGauge({
 
 // Create SP02 Gauge
 var gaugeSP02 = new RadialGauge({
-  renderTo: 'SPO2',
+  renderTo: 'oxygen',
   width: 300,
   height: 300,
   units: "SP02 (%)",
@@ -160,35 +149,10 @@ function getReadings(){
       var temp = myObj.temperature;
       var hum = myObj.humidity;
       gaugeTemp.value = temp;
-      gaugeHum.value = hum;
+      gaugeHR.value = hum;
+      gaugeSP02.value = hum; 
     }
   }; 
   xhr.open("GET", "/readings", true);
   xhr.send();
-}
-
-if (!!window.EventSource) {
-  var source = new EventSource('/events');
-  
-  source.addEventListener('open', function(e) {
-    console.log("Events Connected");
-  }, false);
-
-  source.addEventListener('error', function(e) {
-    if (e.target.readyState != EventSource.OPEN) {
-      console.log("Events Disconnected");
-    }
-  }, false);
-  
-  source.addEventListener('message', function(e) {
-    console.log("message", e.data);
-  }, false);
-  
-  source.addEventListener('new_readings', function(e) {
-    console.log("new_readings", e.data);
-    var myObj = JSON.parse(e.data);
-    console.log(myObj);
-    gaugeTemp.value = myObj.temperature;
-    gaugeHum.value = myObj.humidity;
-  }, false);
 }
