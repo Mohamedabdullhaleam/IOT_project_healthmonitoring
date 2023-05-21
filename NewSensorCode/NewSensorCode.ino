@@ -9,10 +9,10 @@ WiFiClientSecure secured_client;
 WebSocketsClient webSocket;
 PulseOximeter pox;
 
-const char* ssid = "Mohamed";
-const char* password = "mohamed123";
+const char* ssid = "WEDCB108";
+const char* password = "Mohamed12369";
+#define SERVER  "192.168.1.14"
 
-#define SERVER     "172.20.10.5"
 #define PORT       3000
 #define URL        "/"
 #define TempPin     A0
@@ -30,7 +30,7 @@ void onBeatDetected() {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)   //Checks wifi connection
   {
@@ -60,9 +60,7 @@ void setup() {
 
 void loop() {
   webSocket.loop();
-  //getHeartSensor();
-  getTempSensor();
-  getSpO2();
+  getAllReadings();
 }
 
 void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
@@ -76,7 +74,7 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
   }
 }
 
-void sendValue() {
+void sendValuesToServer() {
   StaticJsonDocument<256> jsonDocument;
   String jsonData;
   jsonDocument["value1"] = Temperature ;
@@ -86,10 +84,7 @@ void sendValue() {
   webSocket.sendTXT(jsonData);
 }
 
-void getHeartSensor() {
- 
-}
-void getSpO2() {
+void getAllReadings() {
     // Read from the sensor
     pox.update();
 
@@ -100,7 +95,8 @@ void getSpO2() {
         Serial.print("bpm / SpO2:");
         Serial.print(pox.getSpO2());
         Serial.println("%");
-        sendValue();
+        sendValuesToServer();
+        getTempSensor();
         tsLastReport = millis();
     } webSocket.loop();
 }
@@ -108,8 +104,8 @@ void getSpO2() {
 void getTempSensor() {
   //LM35 average reading for human 37
   int val = analogRead(TempPin);
-  float mv = ( val / 1024.0) * 5000;
-  Temperature = mv / 10;
+  Temperature= ( val / 1024.0) * 330;
+  // = mv / 10;
   String Temp = "Temperature : " + String(Temperature) + " °C";
   Serial.println(Temp);
 }
