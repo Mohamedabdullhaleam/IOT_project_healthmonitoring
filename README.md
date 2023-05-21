@@ -1,10 +1,10 @@
 # IOT_project_healthmonitoring
 
-This is an IoT project designed for monitoring the heart rate, oxygen level and temperature of an individual. The system consists of a MAX30105 sensor for detecting heart rate and oxygen level and a LM35 sensor for measuring temperature. The readings from the sensors are sent to a server using WebSockets protocol.
+This is an IoT project designed for monitoring the heart rate, oxygen level and temperature of an individual. The system consists of a MAX30100 sensor for detecting heart rate and oxygen level and a LM35 sensor for measuring temperature. The readings from the sensors are sent to a server using WebSockets protocol.
 
 ### Components Required
 
-- MAX30105 sensor
+- MAX30100 sensor
 - LM35 sensor
 - NodeMcu board
 - WebSocketsClient library
@@ -15,8 +15,8 @@ This is an IoT project designed for monitoring the heart rate, oxygen level and 
 
 ### Installation
 
-1. Connect the MAX30105 and LM35 sensors to the Nodemcu board.
-2. Install the required libraries (WebSocketsClient, MAX30105, heartRate, ESP8266WiFi, and ArduinoJson) in the Arduino IDE.
+1. Connect the MAX30100 and LM35 sensors to the Nodemcu board.
+2. Install the required libraries (WebSocketsClient, MAX30100, heartRate, ESP8266WiFi, and ArduinoJson) in the Arduino IDE.
 3. Open the code in the Arduino IDE and upload it to the board.
 
 ### Usage
@@ -44,7 +44,7 @@ The following variables can be configured in the code:
 
 ### Troubleshooting
 
-If the MAX30105 sensor is not detected, check the wiring and power supply.
+If the MAX30100 sensor is not detected, check the wiring and power supply.
 
 If the Wi-Fi connection fails, make sure that the Wi-Fi network name and password are correct.
 
