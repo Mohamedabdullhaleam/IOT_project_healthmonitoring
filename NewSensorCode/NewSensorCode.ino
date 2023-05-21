@@ -30,9 +30,8 @@ void onBeatDetected() {
 }
 
 void setup() {
-  
-  Serial.begin(9600);
-  
+
+  Serial.begin(115200);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)   //Checks wifi connection
   {
@@ -88,9 +87,7 @@ void sendValuesToServer() {
   webSocket.sendTXT(jsonData);
 }
 
-
 void getAllReadings() {
-  
     // Read from the sensor
     pox.update();
 
@@ -113,8 +110,8 @@ void getAllReadings() {
 void getTempSensor() {
   //LM35 average reading for human 37
   int val = analogRead(TempPin);
-  float mv = ( val / 1024.0) * 5000;
-  Temperature = mv / 10;
+  Temperature= ( val / 1024.0) * 330;
+  // = mv / 10;
   String Temp = "Temperature : " + String(Temperature) + " °C";
   Serial.println(Temp);
 }
