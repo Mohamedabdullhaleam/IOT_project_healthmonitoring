@@ -19,6 +19,7 @@ const char* password =  "mohamed123";
 
 // Variables for Heart Rate
 uint32_t tsLastReport = 0;
+int HeartRate ,SPO2;
 
 // Variables for Temperature
 int val;
@@ -63,8 +64,7 @@ void setup() {
 
 void loop() {
   webSocket.loop();
-  getTempSensor();
-  getPulseSensor();
+  getAllReadings();
 }
 
 void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
@@ -78,30 +78,33 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
   }
 }
 
-void sendValue() {
+void sendValuesToServer() {
   StaticJsonDocument<256> jsonDocument;
   String jsonData;
   jsonDocument["value1"] = Temperature ;
-  jsonDocument["value2"] = pox.getHeartRate();
-  jsonDocument["value3"] = pox.getSpO2();
+  jsonDocument["value2"] = HeartRate;
+  jsonDocument["value3"] = SPO2;
   serializeJson(jsonDocument, jsonData);    //Convert JSON object to string to send it to server
   webSocket.sendTXT(jsonData);
 }
 
 
-void getPulseSensor() {
+void getAllReadings() {
   
     // Read from the sensor
     pox.update();
 
     // Grab the updated heart rate and SpO2 levels
     if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+         HeartRate =pox.getHeartRate();
+         SPO2= pox.getSpO2();
         Serial.print("Heart rate:");
-        Serial.print(pox.getHeartRate());
+        Serial.print(HeartRate);
         Serial.print("bpm / SpO2:");
-        Serial.print(pox.getSpO2());
+        Serial.print(SPO2);
         Serial.println("%");
-        sendValue();
+        getTempSensor();
+        sendValuesToServer();
         tsLastReport = millis();
     }
     webSocket.loop();
