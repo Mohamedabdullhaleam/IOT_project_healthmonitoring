@@ -15,7 +15,7 @@ const char* password =  "";
 #define PORT                    3000
 #define URL                     "/"
 #define TempPin                 A0
-#define REPORTING_PERIOD_MS     500
+#define REPORTING_PERIOD_MS     1000
 
 // Variables for Heart Rate
 uint32_t tsLastReport = 0;
@@ -26,15 +26,13 @@ int val;
 float Temperature ;
 
 void onBeatDetected() {
-    Serial.print("♥ Beat!");
+    Serial.println("♥ Beat!");
     sendValuesToServer();
- 
 }
 
 void setup() {
-  
+
   Serial.begin(115200);
-  
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)   //Checks wifi connection
   {
@@ -83,7 +81,6 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
 void sendValuesToServer() {
   StaticJsonDocument<256> jsonDocument;
   String jsonData;
-  
   jsonDocument["value1"] = Temperature ;
   jsonDocument["value2"] = HeartRate;
   jsonDocument["value3"] = SPO2;
@@ -91,9 +88,7 @@ void sendValuesToServer() {
   webSocket.sendTXT(jsonData);
 }
 
-
 void getAllReadings() {
- 
     // Read from the sensor
     pox.update();
 
@@ -115,8 +110,8 @@ void getAllReadings() {
 void getTempSensor() {
   //LM35 average reading for human 37
   int val = analogRead(TempPin);
-  float mv = ( val / 1023.0) * 3300;
-  Temperature = mv / 10;
+  Temperature= ( val / 1024.0) * 330;
+  // = mv / 10;
   String Temp = "Temperature : " + String(Temperature) + " °C";
   Serial.println(Temp);
 }
