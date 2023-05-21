@@ -1,6 +1,3 @@
-// Get current sensor readings when the page loads  
-window.addEventListener('load', getReadings);
-
 // Create Temperature Gauge
 var gaugeTemp = new LinearGauge({
   renderTo: 'temperature',
@@ -137,6 +134,7 @@ var gaugeSP02 = new RadialGauge({
   animationDuration: 1500,
   animationRule: "linear"
 }).draw();
+
 src="https://cdn.jsdelivr.net/npm/chart.js@3.4.1/dist/chart.min.js"
 const chart = new Chart(document.getElementById('chart'), {
     type: 'line',
@@ -157,20 +155,54 @@ const chart = new Chart(document.getElementById('chart'), {
     },
   });
 
-// Function to get current readings on the webpage when it loads for the first time
-function getReadings(){
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var myObj = JSON.parse(this.responseText);
-      console.log(myObj);
-      var temp = myObj.temperature;
-      var hum = myObj.humidity;
-      gaugeTemp.value = temp;
-      gaugeHR.value = hum;
-      gaugeSP02.value = hum; 
+
+  var HOST = location.origin.replace(/^http/, 'ws');
+	var ws = new WebSocket(HOST); //#A
+
+  ws.onopen=function(){
+    console.log('Connected to server')
+  }
+
+  ws.onmessage=function(event){
+    const data = JSON.parse(event.data);
+    const Temperature = data.value1;
+    const HeartRate = data.value2;
+    const SPO2 = data.value3;
+ 
+    console.log(Temperature);
+    console.log(HeartRate);
+    console.log(SPO2);
+   
+    gaugeTemp.value = Temperature;
+    gaugeHR.value = HeartRate;
+    gaugeSP02.value = SPO2; 
+
+ 
+    chart.data.labels.push(new Date().toLocaleTimeString());
+    chart.data.datasets[0].data.push(parseFloat(HeartRate));
+    chart.update();
+ 
+    function checkTemp() {
+      if (parseInt(Temperature) >= 40) {
+        sendTelegramMessage("Warning!!! , Temberature is : "+ Temperature +" , Heart rate is : "+HeartRate);
+      }
     }
-  }; 
-  xhr.open("GET", "/readings", true);
-  xhr.send();
-}
+ 
+  progressBar1.addEventListener("input", checkTemp());
+  }
+ 
+  function sendTelegramMessage(message) {
+    const telegramBotToken = "6140302269:AAG5rMISL5xamoIG5dnJcDuaJOK9qt1vWQU";
+    const chatId = "819635862";
+    const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+       
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to send message");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  } 

@@ -1,25 +1,25 @@
-
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WebSocketsClient.h>
 #include <Wire.h>
 #include "MAX30100_PulseOximeter.h"
 
-WiFiClientSecure secured_client;
-WebSocketsClient webSocket;
-PulseOximeter pox;
+WiFiClientSecure  secured_client;
+WebSocketsClient  webSocket;
+PulseOximeter     pox;
 
-const char* ssid = "WEDCB108";
-const char* password = "Mohamed12369";
-#define SERVER  "192.168.1.14"
+const char* ssid     =  "Mohamed";
+const char* password =  "mohamed123";
 
-#define PORT       3000
-#define URL        "/"
-#define TempPin     A0
+#define SERVER                  "172.20.10.5"
+#define PORT                    3000
+#define URL                     "/"
+#define TempPin                 A0
 #define REPORTING_PERIOD_MS     1000
 
 // Variables for Heart Rate
 uint32_t tsLastReport = 0;
+int HeartRate ,SPO2;
 
 // Variables for Temperature
 int val;
@@ -30,6 +30,7 @@ void onBeatDetected() {
 }
 
 void setup() {
+
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)   //Checks wifi connection
@@ -39,10 +40,12 @@ void setup() {
   }
   Serial.print("\nWiFi connected. IP address: ");
   Serial.println(WiFi.localIP());
-
+  
+//Connect to websocket server
   webSocket.begin(SERVER, PORT, URL);
   webSocket.onEvent(webSocketEvent);
   
+//Check the sensor connection  
   if (!pox.begin()) {
         Serial.println("FAILED");
         for(;;);
@@ -53,8 +56,8 @@ void setup() {
   // Configure sensor to use 7.6mA for LED drive
   pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
 
-    // Register a callback routine
-    pox.setOnBeatDetectedCallback(onBeatDetected);
+  // Register a callback routine
+  pox.setOnBeatDetectedCallback(onBeatDetected);
   
 }
 
@@ -78,8 +81,8 @@ void sendValuesToServer() {
   StaticJsonDocument<256> jsonDocument;
   String jsonData;
   jsonDocument["value1"] = Temperature ;
-  jsonDocument["value2"] = pox.getHeartRate();
-  jsonDocument["value3"] = pox.getSpO2();
+  jsonDocument["value2"] = HeartRate;
+  jsonDocument["value3"] = SPO2;
   serializeJson(jsonDocument, jsonData);    //Convert JSON object to string to send it to server
   webSocket.sendTXT(jsonData);
 }
@@ -90,15 +93,18 @@ void getAllReadings() {
 
     // Grab the updated heart rate and SpO2 levels
     if (millis() - tsLastReport > REPORTING_PERIOD_MS) {
+         HeartRate =pox.getHeartRate();
+         SPO2= pox.getSpO2();
         Serial.print("Heart rate:");
-        Serial.print(pox.getHeartRate());
+        Serial.print(HeartRate);
         Serial.print("bpm / SpO2:");
-        Serial.print(pox.getSpO2());
+        Serial.print(SPO2);
         Serial.println("%");
-        sendValuesToServer();
         getTempSensor();
+        sendValuesToServer();
         tsLastReport = millis();
-    } webSocket.loop();
+    }
+    webSocket.loop();
 }
 
 void getTempSensor() {
