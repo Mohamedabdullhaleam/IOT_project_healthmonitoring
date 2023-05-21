@@ -7,12 +7,13 @@ const app = express();
 const port = 3000;
 
 const server = app.listen(port, function() {
-  console.log("Server is running at port" + port);
+  console.log("Server is running at port " + port);
 });
 
-app.get('/', function(req, res) {
-  const filePath = path.resolve('D:/iot2/SensorsTest - Copy.html');
-  res.sendFile(filePath);
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', function(req,res){
+  res.sendFile(__dirname+"/public/html/index.html"); 
 });
 
 const wss = new WebSocketServer({ server });
@@ -25,7 +26,7 @@ wss.on('connection', (ws) => {
   
   ws.on('message', (msg) => {
     Broadcast(msg.toString('utf8'));
-    const txtPath = 'D:/iot2/New Text Document.txt';
+    const txtPath = 'D:/Projects/IOT_project_healthmonitoring/New Text Document.txt';
     const data = JSON.parse(msg.toString('utf8'));
     const now = new Date();
     var date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
