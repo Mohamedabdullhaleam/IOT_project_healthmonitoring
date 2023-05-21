@@ -1,21 +1,20 @@
-
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WebSocketsClient.h>
 #include <Wire.h>
 #include "MAX30100_PulseOximeter.h"
 
-WiFiClientSecure secured_client;
-WebSocketsClient webSocket;
-PulseOximeter pox;
+WiFiClientSecure  secured_client;
+WebSocketsClient  webSocket;
+PulseOximeter     pox;
 
-const char* ssid = "Mohamed";
-const char* password = "mohamed123";
+const char* ssid     =  "Mohamed";
+const char* password =  "mohamed123";
 
-#define SERVER     "172.20.10.5"
-#define PORT       3000
-#define URL        "/"
-#define TempPin     A0
+#define SERVER                  "172.20.10.5"
+#define PORT                    3000
+#define URL                     "/"
+#define TempPin                 A0
 #define REPORTING_PERIOD_MS     1000
 
 // Variables for Heart Rate
@@ -30,7 +29,9 @@ void onBeatDetected() {
 }
 
 void setup() {
+  
   Serial.begin(9600);
+  
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED)   //Checks wifi connection
   {
@@ -39,10 +40,12 @@ void setup() {
   }
   Serial.print("\nWiFi connected. IP address: ");
   Serial.println(WiFi.localIP());
-
+  
+//Connect to websocket server
   webSocket.begin(SERVER, PORT, URL);
   webSocket.onEvent(webSocketEvent);
   
+//Check the sensor connection  
   if (!pox.begin()) {
         Serial.println("FAILED");
         for(;;);
@@ -53,16 +56,15 @@ void setup() {
   // Configure sensor to use 7.6mA for LED drive
   pox.setIRLedCurrent(MAX30100_LED_CURR_7_6MA);
 
-    // Register a callback routine
-    pox.setOnBeatDetectedCallback(onBeatDetected);
+  // Register a callback routine
+  pox.setOnBeatDetectedCallback(onBeatDetected);
   
 }
 
 void loop() {
   webSocket.loop();
-  //getHeartSensor();
   getTempSensor();
-  getSpO2();
+  getPulseSensor();
 }
 
 void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
@@ -86,10 +88,9 @@ void sendValue() {
   webSocket.sendTXT(jsonData);
 }
 
-void getHeartSensor() {
- 
-}
-void getSpO2() {
+
+void getPulseSensor() {
+  
     // Read from the sensor
     pox.update();
 
@@ -102,7 +103,8 @@ void getSpO2() {
         Serial.println("%");
         sendValue();
         tsLastReport = millis();
-    } webSocket.loop();
+    }
+    webSocket.loop();
 }
 
 void getTempSensor() {
