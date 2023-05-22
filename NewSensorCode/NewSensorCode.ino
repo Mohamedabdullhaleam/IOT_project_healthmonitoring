@@ -8,10 +8,10 @@ WiFiClientSecure  secured_client;
 WebSocketsClient  webSocket;
 PulseOximeter     pox;
 
-const char* ssid     =  "Mohamed";
-const char* password =  "mohamed123";
+const char* ssid     =  "";
+const char* password =  "";
 
-#define SERVER                  "172.20.10.5"
+#define SERVER                  ""
 #define PORT                    3000
 #define URL                     "/"
 #define TempPin                 A0
@@ -27,6 +27,7 @@ float Temperature ;
 
 void onBeatDetected() {
     Serial.println("♥ Beat!");
+    sendValuesToServer();
 }
 
 void setup() {
@@ -101,7 +102,6 @@ void getAllReadings() {
         Serial.print(SPO2);
         Serial.println("%");
         getTempSensor();
-        sendValuesToServer();
         tsLastReport = millis();
     }
     webSocket.loop();
