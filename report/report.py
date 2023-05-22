@@ -6,9 +6,11 @@ from datetime import datetime
 import telebot
 import matplotlib.pyplot as plt
 from docx.shared import Inches
-
+import matplotlib.dates as mdates
 
 counter = 1
+
+
 def extract_data_and_generate_report():
     global counter
     # read by default 1st sheet of an excel file
@@ -19,18 +21,21 @@ def extract_data_and_generate_report():
     ## specify x and y  axises
     x_column = 'Time'  # Replace 'XColumn' with the name of the x-axis column
     y_column = 'BPM'  # Replace 'YColumn' with the name of the y-axis column
-    df['XTime'] = df[x_column].apply(lambda x: x.hour * 3600 + x.minute * 60 + x.second)
+    df[x_column] = pd.to_datetime(df[x_column], format='%H:%M:%S')  # Adjust the format string as needed
     ## create the plot
     plt.figure(figsize=(6, 4))
     fig, ax = plt.subplots()
-    ax.plot(df['XTime'], df[y_column])
+    ax.plot(df[x_column], df[y_column])
     ax.set_xlabel('Time')
     ax.set_ylabel('BPM')
     ax.set_title('BPM')
+    ##format the time b2a
+    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    plt.gcf().autofmt_xdate()
+
     ## save the plot
     plot_filename = 'BPM_plot.png'
     plt.savefig(plot_filename)
-
 
     ## create a hisogram for SPO2
     plt.figure(figsize=(6, 4))
@@ -57,8 +62,7 @@ def extract_data_and_generate_report():
 
     # # Add the header rows.
     for j in range(len(important_data.columns)):
-        table.cell(0,j).text = important_data.columns[j]
-
+        table.cell(0, j).text = important_data.columns[j]
 
     # # Add the data rows.
     for i in range(3):
@@ -66,8 +70,8 @@ def extract_data_and_generate_report():
         row_cells = table.add_row().cells
         # # Add the data from the dataframe
         for j in range(len(important_data.columns)):
-            row_cells[j].text = str(important_data.values[i,j])
-    #print(important_data)
+            row_cells[j].text = str(important_data.values[i, j])
+    # print(important_data)
 
     ## plotting
     # doc.add_picture(plot_filename, width=Inches(3))
@@ -79,14 +83,13 @@ def extract_data_and_generate_report():
     his = paragraph.add_run()
     his.add_picture(hist_filename, width=Inches(5))
 
-
     print(doc_name_print + " is generated")
     # Save the Word document
     doc.save(doc_name)
 
     # # send word document to telegram
     bot = telebot.TeleBot("6140302269:AAG5rMISL5xamoIG5dnJcDuaJOK9qt1vWQU")
-    chat_id = "819635862"
+    chat_id = "639643824"
     doc = open(doc_name, 'rb')
     bot.send_document(chat_id, doc)
     print("Document sent successfully")
