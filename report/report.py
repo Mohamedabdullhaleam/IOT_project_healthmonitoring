@@ -7,7 +7,9 @@ import telebot
 import matplotlib.pyplot as plt
 from docx.shared import Inches
 import matplotlib.dates as mdates
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
+##FOR GENERATING MANY WORDS
 counter = 1
 
 
@@ -15,15 +17,14 @@ def extract_data_and_generate_report():
     global counter
     # read by default 1st sheet of an excel file
     df = pd.read_excel('data/edited_data .xlsx', sheet_name='daata')
-
-    important_data = df[['measurment', 'average', 'max', 'min']]
+    important_data = df[['Measurement', 'Average', 'Max', 'Min']]
 
     ## specify x and y  axises
     x_column = 'Time'  # Replace 'XColumn' with the name of the x-axis column
     y_column = 'BPM'  # Replace 'YColumn' with the name of the y-axis column
     df[x_column] = pd.to_datetime(df[x_column], format='%H:%M:%S')  # Adjust the format string as needed
-    ## create the plot
-    plt.figure(figsize=(6, 4))
+    ## create the plot   BPM AND TIME
+    plt.figure(figsize=(6, 4)) #
     fig, ax = plt.subplots()
     ax.plot(df[x_column], df[y_column])
     ax.set_xlabel('Time')
@@ -55,10 +56,13 @@ def extract_data_and_generate_report():
     doc = Document()
 
     # Add a heading to the document
-    doc.add_heading('Important Data', level=1)
+    doc.add_heading('Important Data', level=0).alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
     # Convert the important data to a table in Word
     table = doc.add_table(1, len(important_data.columns))
-    table.style = 'Table Grid'
+    table.style = 'Light List Accent 1'
+    new_width = Cm(10)  # Set the new width (here, 10 centimeters)
+    change_table_dimensions(table, new_width)
 
     # # Add the header rows.
     for j in range(len(important_data.columns)):
@@ -97,6 +101,21 @@ def extract_data_and_generate_report():
 
 # Schedule the script to run every 5 minutes
 schedule.every(1).seconds.do(extract_data_and_generate_report)
+# adjusting table dimensions
+from docx import Document
+from docx.shared import Cm
+
+def change_table_dimensions(table, width):
+    # Change the table width
+    table.width = width
+
+    # Adjust the cell widths
+    for row in table.rows:
+        for cell in row.cells:
+            cell.width = width / len(row.cells)
+
+
+
 
 while True:
     schedule.run_pending()
