@@ -113,9 +113,9 @@ const chart = new Chart(document.getElementById('chart'), {
  
   }
     
-  function checkTemp() {
-    if (parseInt(Temperature) >= 37 || parseInt(HeartRate) >= 120 || parseInt(SPO2) >= 100)  {
-      sendTelegramMessage("Warning!!! , Temberature is : "+ Temperature +" , Heart rate is : "+HeartRate +" , Oxygen level is : "+ SPO2 );
+  function checkValues() {
+    if (parseInt(Temperature) >= 37 || parseInt(HeartRate) >= 120 || parseInt(HeartRate) <60 || parseInt(SPO2) >= 100 || parseInt(SPO2) < 80)  {
+      sendTelegramMessage("Warning!!! , Temperature is : "+ Temperature +" , Heart rate is : "+HeartRate +" , Oxygen level is : "+ SPO2 );
     }
   }
   
@@ -124,7 +124,7 @@ const chart = new Chart(document.getElementById('chart'), {
     const currentMinute = now.getMinutes();
   
     if (currentMinute !== previousMinute) {
-      checkTemp()
+      checkValues()
       previousMinute = currentMinute; 
     }
   }
