@@ -152,5 +152,5 @@ const chart = new Chart(document.getElementById('chart'), {
 
   let progress2 = setInterval(() => {  
     progressValue2.textContent = `${progressStartValue2}%`
-    circularProgress2.style.background = `conic-gradient(#021042 ${progressStartValue2 * 2.4}deg, #ededed 0deg)` 
+    circularProgress2.style.background = `conic-gradient(#021042 ${progressStartValue2 * 3.6}deg, #ededed 0deg)` 
   });

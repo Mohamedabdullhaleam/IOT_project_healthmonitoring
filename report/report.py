@@ -9,10 +9,8 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx import Document
 from docx.shared import Cm
 
-
 # FOR GENERATING MANY WORDS
 counter = 1
-
 
 def extract_data_and_generate_report():
     global counter
@@ -20,6 +18,17 @@ def extract_data_and_generate_report():
     df = pd.read_excel('data/edited_data .xlsx', sheet_name='daata')
     # read the 'Measurement', 'Average', 'Max', 'Min' columns from our dataframe
     important_data = df[['Measurement', 'Average', 'Max', 'Min']]
+
+    # Create a new Word document
+    doc_name = f'reports/report{counter}.docx'
+    doc_name_print = f'report{counter}.docx'
+    counter += 1
+    doc = Document()
+
+    # for styling the document file
+    # Add a heading to the document
+    doc.add_heading('Important Data', level=0).alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
 
     # for plotting BPM vs time
     # specify x and y  axises
@@ -38,8 +47,8 @@ def extract_data_and_generate_report():
     ax.set_title('BPM')
 
     # format the time axis label to appear as H:M:S
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
-    plt.gcf().autofmt_xdate()
+    # plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%H:%M:%S'))
+    # plt.gcf().autofmt_xdate()
 
     # save the plot as a png
     plot_filename = 'BPM_plot.png'
@@ -55,16 +64,6 @@ def extract_data_and_generate_report():
     # save the plot as a png
     hist_filename = "histogram.png"
     plt.savefig(hist_filename)
-
-    # Create a new Word document
-    doc_name = f'reports/report{counter}.docx'
-    doc_name_print = f'report{counter}.docx'
-    counter += 1
-    doc = Document()
-
-    # for styling the document file
-    # Add a heading to the document
-    doc.add_heading('Important Data', level=0).alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
     # Convert the important data to a table in Word
     table = doc.add_table(1, len(important_data.columns))
@@ -112,7 +111,7 @@ def extract_data_and_generate_report():
 
 
 # Schedule the script to run every 1 sec
-schedule.every(30).seconds.do(extract_data_and_generate_report)
+schedule.every(1).seconds.do(extract_data_and_generate_report)
 
 
 def change_table_dimensions(table, width):
