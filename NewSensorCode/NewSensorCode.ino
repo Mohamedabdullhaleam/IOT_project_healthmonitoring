@@ -42,9 +42,11 @@ const unsigned char bitmap [] PROGMEM =
 
 void onBeatDetected() {
   Serial.println("♥ Beat!");
-  sendValuesToServer();
-  oled.drawBitmap( 60, 20, bitmap, 28, 28, 1);
-  oled.display();
+  if ((SPO2 > 0) && (HeartRate > 0)) {
+    sendValuesToServer();
+    oled.drawBitmap( 60, 20, bitmap, 28, 28, 1);
+    oled.display();
+  }
 }
 
 void setup() {
@@ -147,7 +149,7 @@ void getAllReadings() {
     oled.setTextColor(1);
     oled.setCursor(0, 16);
     oled.println(HeartRate);
-
+    
     oled.setTextSize(2);
     oled.setTextColor(1);
     oled.setCursor(0, 0);
@@ -164,7 +166,6 @@ void getAllReadings() {
     oled.println(SPO2);
     oled.display();
 
-   
     tsLastReport = millis();
   }
   webSocket.loop();
@@ -174,7 +175,6 @@ void getTempSensor() {
   //LM35 average reading for human 37
   int val = analogRead(TempPin);
   Temperature = ( val / 1024.0) * 330;
-  // = mv / 10;
   String Temp = "Temperature : " + String(Temperature) + " °C";
   Serial.println(Temp);
 }
