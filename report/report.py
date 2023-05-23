@@ -18,7 +18,6 @@ def extract_data_and_generate_report():
     global counter
     # read the daata sheet from excel file
     df = pd.read_excel('data/edited_data .xlsx', sheet_name='daata')
-
     # read the 'Measurement', 'Average', 'Max', 'Min' columns from our dataframe
     important_data = df[['Measurement', 'Average', 'Max', 'Min']]
 
@@ -33,8 +32,8 @@ def extract_data_and_generate_report():
     # create the plot   BPM AND TIME
     plt.figure(figsize=(6, 4))
     fig, ax = plt.subplots()
-    ax.plot(df[x_column], df[y_column])
-    ax.set_xlabel('Time')
+    ax.plot(df['Index'], df[y_column])
+    ax.set_xlabel('spontinous reading')
     ax.set_ylabel('BPM')
     ax.set_title('BPM')
 
@@ -113,7 +112,7 @@ def extract_data_and_generate_report():
 
 
 # Schedule the script to run every 1 sec
-schedule.every(1).seconds.do(extract_data_and_generate_report)
+schedule.every(30).seconds.do(extract_data_and_generate_report)
 
 
 def change_table_dimensions(table, width):
