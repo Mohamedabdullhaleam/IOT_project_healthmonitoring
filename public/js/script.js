@@ -74,7 +74,7 @@ const chart = new Chart(document.getElementById('chart'), {
   circularProgress1 = document.getElementById("chr");
   progressValue1 = document.getElementById("hr");
   let progressStartValue1 = 0,    
-  progressEndValue1 = 100;   
+  progressEndValue1 = 150;   
 
   circularProgress2 = document.getElementById("cspo2");
   progressValue2 = document.getElementById("spo2");
@@ -82,7 +82,7 @@ const chart = new Chart(document.getElementById('chart'), {
   progressEndValue2 = 100;  
 
   var HOST = location.origin.replace(/^http/, 'ws');
-	var ws = new WebSocket(HOST); //#A
+	var ws = new WebSocket(HOST); 
 
   var Temperature, HeartRate, SPO2;
   ws.onopen=function(){
@@ -114,7 +114,7 @@ const chart = new Chart(document.getElementById('chart'), {
   }
     
   function checkTemp() {
-    if (parseInt(Temperature) >= 20 || parseInt(HeartRate) >= 120 || parseInt(SPO2) >= 100)  {
+    if (parseInt(Temperature) >= 37 || parseInt(HeartRate) >= 120 || parseInt(SPO2) >= 100)  {
       sendTelegramMessage("Warning!!! , Temberature is : "+ Temperature +" , Heart rate is : "+HeartRate +" , Oxygen level is : "+ SPO2 );
     }
   }
@@ -147,10 +147,10 @@ const chart = new Chart(document.getElementById('chart'), {
 
   let progress1 = setInterval(() => {  
     progressValue1.textContent = `${progressStartValue1}`
-    circularProgress1.style.background = `conic-gradient(#7d2ae8 ${progressStartValue1 * 3.6}deg, #ededed 0deg)` 
+    circularProgress1.style.background = `conic-gradient(#021042 ${progressStartValue1 * 3.6}deg, #ededed 0deg)` 
   });
 
   let progress2 = setInterval(() => {  
     progressValue2.textContent = `${progressStartValue2}%`
-    circularProgress2.style.background = `conic-gradient(#7d2ae8 ${progressStartValue2 * 3.6}deg, #ededed 0deg)` 
+    circularProgress2.style.background = `conic-gradient(#021042 ${progressStartValue2 * 3.6}deg, #ededed 0deg)` 
   });
