@@ -147,10 +147,10 @@ const chart = new Chart(document.getElementById('chart'), {
 
   let progress1 = setInterval(() => {  
     progressValue1.textContent = `${progressStartValue1}`
-    circularProgress1.style.background = `conic-gradient(#021042 ${progressStartValue1 * 3.6}deg, #ededed 0deg)` 
+    circularProgress1.style.background = `conic-gradient(#021042 ${progressStartValue1 * 2.4}deg, #ededed 0deg)` 
   });
 
   let progress2 = setInterval(() => {  
     progressValue2.textContent = `${progressStartValue2}%`
-    circularProgress2.style.background = `conic-gradient(#021042 ${progressStartValue2 * 3.6}deg, #ededed 0deg)` 
+    circularProgress2.style.background = `conic-gradient(#021042 ${progressStartValue2 * 2.4}deg, #ededed 0deg)` 
   });
