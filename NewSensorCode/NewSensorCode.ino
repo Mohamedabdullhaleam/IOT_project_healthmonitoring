@@ -11,10 +11,10 @@ WebSocketsClient  webSocket;
 PulseOximeter     pox;
 OakOLED           oled;
 
-const char* ssid     =  "OPPO Reno6";
-const char* password =  "2/2/2002";
+const char* ssid     =  "Mohamed";
+const char* password =  "mohamed123";
 
-#define SERVER                  "192.168.228.22"
+#define SERVER                  "172.20.10.8"
 #define PORT                    3000
 #define URL                     "/"
 #define TempPin                 A0
@@ -145,36 +145,25 @@ void getAllReadings() {
     getTempSensor();
 
     oled.clearDisplay();
-    oled.setTextSize(1);
+    oled.setTextSize(2);
     oled.setTextColor(1);
     oled.setCursor(0, 16);
     oled.println(HeartRate);
-
-    oled.setTextSize(1);
+    
+    oled.setTextSize(2);
     oled.setTextColor(1);
     oled.setCursor(0, 0);
     oled.println("Heart BPM");
 
-    oled.setTextSize(1);
+    oled.setTextSize(2);
     oled.setTextColor(1);
     oled.setCursor(0, 30);
     oled.println("Spo2");
 
-    oled.setTextSize(1);
+    oled.setTextSize(2);
     oled.setTextColor(1);
     oled.setCursor(0, 45);
     oled.println(SPO2);
-    oled.display();
-
-    oled.setTextSize(1);
-    oled.setTextColor(1);
-    oled.setCursor(0, 50);
-    oled.println("Temp");
-
-    oled.setTextSize(1);
-    oled.setTextColor(1);
-    oled.setCursor(0, 60);
-    oled.println(Temperature);
     oled.display();
 
     tsLastReport = millis();
@@ -186,7 +175,6 @@ void getTempSensor() {
   //LM35 average reading for human 37
   int val = analogRead(TempPin);
   Temperature = ( val / 1024.0) * 330;
-  // = mv / 10;
   String Temp = "Temperature : " + String(Temperature) + " °C";
   Serial.println(Temp);
 }
