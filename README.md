@@ -37,9 +37,10 @@ The following variables can be configured in the code:
 - `URL`: The URL of the server.
 - `TempPin`: The pin number of the LM35 sensor.
 
-### Circuit Diagram 
+### Circuit Diagram
 
-![IOT_bb](https://github.com/alaawahba13/IOT_project_healthmonitoring/assets/101985923/9eba86fd-0219-4f73-a14e-221c2d0a6254)
+
+![IOT(1)_bb](https://github.com/retrogradex/IOT_project_healthmonitoring/assets/107015185/a21b35d8-9282-4b90-a459-e89f60f59420)
 
 
 ### Troubleshooting
