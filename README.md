@@ -6,6 +6,7 @@ This is an IoT project designed for monitoring the heart rate, oxygen level and 
 
 - MAX30100 sensor
 - LM35 sensor
+- OLED screen
 - NodeMcu board
 - WebSocketsClient library
 - MAX30105 library
