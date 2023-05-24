@@ -63,11 +63,11 @@ If the heart rate and temperature readings are not accurate, check the placement
 This code was developed by 
 - [@Alaa Wahba](https://github.com/alaawahba13)
 - [@Mohamed Abdullhaleam](https://github.com/Mohamedabdullhaleam)
+- [@Mohamed Abdelzaher](https://github.com/Mohamed991-1) 
 - [@Fareda Elsayed]( https://github.com/FaredaElsayed)
 - [@Gehad Alaa ](https://github.com/Gehad799)
 - [@Roaa Gawish ](https://github.com/roaagawish)
 - [@Mohamed Khodary](https://github.com/moekhodry11)
-- [@Mohamed Abdelzaher](https://github.com/Mohamed991-1) 
 - [@Hagar Tarek](https://github.com/Hager706)
 - [@Islam Morgan](https://github.com/retrogradex)
 
