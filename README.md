@@ -49,6 +49,11 @@ The following variables can be configured in the code:
 <img width="957" alt="Screenshot 2023-05-23 190006" src="https://github.com/alaawahba13/IOT_project_healthmonitoring/assets/101985923/caca05e9-2f8f-4f8d-91c2-1a04189a8df9">
 
 ![photo_2023-05-23_18-53-37](https://github.com/alaawahba13/IOT_project_healthmonitoring/assets/101985923/55b5ecbb-38b5-4448-8ae0-72ea581b2f48)
+### Project demo
+
+
+https://github.com/Mohamedabdullhaleam/IOT_project_healthmonitoring/assets/76539072/7a6c8362-cdb5-46d8-886e-5b4b871e8e3d
+
 
 ### Troubleshooting
 
